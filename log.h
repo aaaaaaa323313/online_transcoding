@@ -1,6 +1,6 @@
-/*Copyright (C) Wison Telecommunication Tech, Ltd
+/*Copyright (C) Guanyu@ntu
  *Author:Guanyu
- *Date:2011-3-5     
+ *Date:2014-5-25     
  */
 
 #ifndef SERV_LOG_HH

@@ -1,6 +1,6 @@
-/*Copyright (C) Wison Telecommunication Tech, Ltd
+/*Copyright (C) Guanyu@ntu
  *Author:Guanyu
- *Date:2011-1-1         
+ *Date:2014-5-25         
  */
 
 #define FUSE_USE_VERSION 26
@@ -17,8 +17,8 @@
 #include <sys/stat.h>
 #include <sys/statvfs.h>
 #include <stddef.h>
+
 #include "fsys.h"
-#include "client.h"
 #include "log.h"
 
 
@@ -77,6 +77,28 @@ char* translate_path(const char* path)
 
     return result;
 }
+
+
+int judge_file_suffix(const char *path)
+{
+    if (!(strstr(path, ".m3u8") || strstr(path, ".ts")))
+        return 0;
+    else
+        return 1;
+}
+
+
+int if_file_exist(const char *path)
+{
+    int ret = access(path, F_OK);
+    if (!ret)
+        return 1;       //file exist
+    else if ((ret == -1)&& (errno == ENOENT))
+        return 0;       //file not exist
+
+    return -1;          //error
+}
+
 
 int transcode(const char *path)
 {
