@@ -106,7 +106,7 @@ int if_file_exist(const char *path)
 int get_name_info(const char *path, TransTask* task)
 {
 
-	char Param[7][30];
+	char Param[4][100] = {0};
 
 	int len = strlen(path);
 	while (--len >= 0)
@@ -134,18 +134,18 @@ int get_name_info(const char *path, TransTask* task)
 			index++;
 			j = 0;
 
-			if (index == 7 && strstr(path, ".ts"))
+			if (index == 4 && path[i] == '.')
 				break;	
 		}
 	}
 
 		
-	if (index == 7 && strstr(path, ".ts"))
+	if (index == 4)
 	{
-		task -> width		= atoi(Param[2]);
-		task -> height		= atoi(Param[3]);
-		task -> bitrate		= atoi(Param[4]);
-        strcpy(task->file_name, path);
+		task -> width		= atoi(Param[1]); // width
+		task -> height		= atoi(Param[2]); // height
+		task -> bitrate		= atoi(Param[3]); // bitrate
+        strcpy(task->file_name, Param[0]);    // the file name of the original ts file
 		return 0;
 	}
 	return -1;
@@ -178,7 +178,7 @@ int transcode(const char *path)
 		servlog(INFO, "task->file_name:%s", task.file_name);
 		
 
-		if(trans_file(task, true, 1))
+		if(trans_file(task))
 			servlog(INFO, "transcode the file success:%s", path);
 		else
 		{
@@ -189,6 +189,11 @@ int transcode(const char *path)
 	return 0;
 }
 
+int trans_file(TransTask task)
+{
+    return 1;
+    return 0;
+}
 
 static int fsys_readlink(const char *path, char *buf, size_t size) 
 {

@@ -25,7 +25,7 @@ DEBUG_CFLAGS     := -Wall -Wno-format -g -DDEBUG -D_FILE_OFFSET_BITS=64 \
 RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O0 -D_FILE_OFFSET_BITS=64\
 					-DPACKAGE_VERSION=\"1.0\"
 
-LIBS		 := -lfuse -lpthread -lthrift
+LIBS		 := -lfuse -lpthread
 
 DEBUG_CXXFLAGS   := ${DEBUG_CFLAGS} 
 RELEASE_CXXFLAGS := ${RELEASE_CFLAGS}
@@ -87,7 +87,7 @@ all: ${OUTPUT}
 # Source files
 #****************************************************************************
 
-SRCS :=  fsys.cpp client.cpp  log.cpp\
+SRCS :=  fsys.cpp log.cpp\
 
 # Add on the sources for libraries
 SRCS := ${SRCS}
