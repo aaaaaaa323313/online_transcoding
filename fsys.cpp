@@ -59,7 +59,6 @@ static struct fuse_opt fsys_opts[] = {
 
 char* translate_path(const char* path) 
 {
-    printf("the file path is %s\n", path);
 
     char* result;
     result = (char *)malloc(strlen(params.basepath) + strlen(path) + 1);
@@ -98,10 +97,7 @@ int if_file_exist(const char *path)
 {
     int ret = access(path, F_OK);
     if (!ret)
-    {
-        printf("the file exists in the path: %s\n", path);
         return 1;       //file exist
-    }
     else if ((ret == -1) && (errno == ENOENT))
         return 0;       //file not exist
 
@@ -147,10 +143,10 @@ int get_name_info(const char *path, TransTask* task)
 		
 	if (index == 4)
 	{
-		task -> width		= atoi(Param[1]); // width
-		task -> height		= atoi(Param[2]); // height
-		task -> bitrate		= atoi(Param[3]); // bitrate
-        strcpy(task->file_name, Param[0]);    // the file name of the original ts file
+		strcpy(task -> width,   Param[1]); // width
+		strcpy(task -> height,  Param[2]); // height
+		strcpy(task -> bitrate, Param[3]); // bitrate
+        strcpy(task->file_name, Param[0]); // the file name of the original ts file
 		return 0;
 	}
 	return -1;
@@ -183,7 +179,7 @@ int transcode(const char *path)
 		servlog(INFO, "task->file_name:%s", task.file_name);
 		
 
-		if(trans_file(task))
+		if(trans_file(&task, path))
 			servlog(INFO, "transcode the file success:%s", path);
 		else
 		{
@@ -194,10 +190,27 @@ int transcode(const char *path)
 	return 0;
 }
 
-int trans_file(TransTask task)
+int trans_file(TransTask* task, const char* path)
 {
+    char new_ts[100]      = {0};
+    char original_ts[100] = {0};
+
+    strcpy(original_ts, "/home/guanyu/Public/david/");
+    strcat(original_ts, task->file_name);
+    strcat(original_ts, ".ts");
+
+    char cmd[100] = {0};
+    strcpy(cmd, "ffmpeg -i ");
+    strcat(cmd, original_ts);
+    strcat(cmd, " -s ");
+    strcat(cmd, task->width);
+    strcat(cmd, "x");
+    strcat(cmd, task->height);
+    strcat(cmd, " ");
+    strcat(cmd, path);
+    servlog(INFO, "command:%s", cmd);
+    system(cmd);
     return 1;
-    return 0;
 }
 
 static int fsys_readlink(const char *path, char *buf, size_t size) 

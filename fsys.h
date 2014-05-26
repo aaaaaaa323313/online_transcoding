@@ -12,10 +12,10 @@ struct fsys_params {
 
 typedef struct TransTask
 {
-    int     width;
-    int     height;
-    int     bitrate;
-    char    file_name[100];
+    char     width[20];
+    char     height[20];
+    char     bitrate[20];
+    char     file_name[100];
 }TransTask;
 
 int judge_file_suffix(const char *path); //0 the file is neither m3u8 nor ts
@@ -23,4 +23,4 @@ int judge_file_suffix(const char *path); //0 the file is neither m3u8 nor ts
 
 int if_file_exist(const char *path); // -1 error; 0 not exist; 1 exist;
 
-int trans_file(TransTask task);
+int trans_file(TransTask* task, const char* path);
