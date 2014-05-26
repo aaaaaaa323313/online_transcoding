@@ -78,22 +78,28 @@ char* translate_path(const char* path)
     return result;
 }
 
+/* to judge if the requested file is a ts file
+ * if the returned value is zero, then it's not a ts file
+ * if the returned value is one, then it's a ts file
+ */
+
 
 int judge_file_suffix(const char *path)
 {
-    if (!(strstr(path, ".m3u8") || strstr(path, ".ts")))
+    if (!(strstr(path, ".ts")))
         return 0;
     else
         return 1;
 }
 
+/* if the file has been existed */
 
 int if_file_exist(const char *path)
 {
     int ret = access(path, F_OK);
     if (!ret)
         return 1;       //file exist
-    else if ((ret == -1)&& (errno == ENOENT))
+    else if ((ret == -1) && (errno == ENOENT))
         return 0;       //file not exist
 
     return -1;          //error
@@ -104,8 +110,8 @@ int transcode(const char *path)
 {
 	int ret;
 
-	//if the file is .m3u8 or .ts
-	ret = judge_file_suffix(path); //0 the file is neither m3u8 nor ts
+	//if the file is a ts file
+	ret = judge_file_suffix(path); //0, the file is not a ts file
 	if (!ret)
 		return 0;
 
