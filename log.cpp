@@ -78,9 +78,9 @@ int servlog(TYPE type, const char* format, ...)
 
 	fwrite(line, 1, strlen(line), fplog[type]);
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	fflush(fplog[type]);
-#endif
+//#endif
 
 	return 0;
 }

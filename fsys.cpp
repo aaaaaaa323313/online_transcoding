@@ -59,6 +59,8 @@ static struct fuse_opt fsys_opts[] = {
 
 char* translate_path(const char* path) 
 {
+    printf("the file path is %s\n", path);
+
     char* result;
     result = (char *)malloc(strlen(params.basepath) + strlen(path) + 1);
 
@@ -96,7 +98,10 @@ int if_file_exist(const char *path)
 {
     int ret = access(path, F_OK);
     if (!ret)
+    {
+        printf("the file exists in the path: %s\n", path);
         return 1;       //file exist
+    }
     else if ((ret == -1) && (errno == ENOENT))
         return 0;       //file not exist
 
@@ -365,6 +370,9 @@ static int fsys_read(const char *path, char *buf, size_t size, off_t offset,
     errno = 0;
 
     origpath = translate_path(path);
+    
+    servlog(INFO, "the original file is %s\n", origpath);
+
     if (!origpath) 
         return -errno;
 
