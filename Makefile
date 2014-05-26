@@ -88,10 +88,6 @@ all: ${OUTPUT}
 #****************************************************************************
 
 SRCS :=  fsys.cpp client.cpp  log.cpp\
-		TranServerLib/Transcoder_constants.cpp  TranServerLib/Transcoder.cpp \
-		TranServerLib/Transcoder_types.cpp 									 \
-		DBServerLib/FileInfoDB_constants.cpp  DBServerLib/FileInfoDB.cpp 	 \
-		DBServerLib/FileInfoDB_types.cpp 									\
 
 # Add on the sources for libraries
 SRCS := ${SRCS}

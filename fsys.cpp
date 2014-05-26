@@ -22,8 +22,6 @@
 #include "log.h"
 
 
-extern void query_db(FileInfo& fileinfo, const std::string& filename);
-extern int	get_name_info(const char *path, FileInfo& fileinfo);
 
 //C99标准
 struct fsys_params params = 
@@ -105,6 +103,55 @@ int if_file_exist(const char *path)
     return -1;          //error
 }
 
+int get_name_info(const char *path, TransTask* task)
+{
+
+	char Param[7][30];
+
+	int len = strlen(path);
+	while (--len >= 0)
+		if (path[len] == '/')
+			break;
+
+	if (len < 0)
+		return -1;
+
+	unsigned int i;
+	unsigned int j = 0;
+	unsigned int index = 0;
+
+	for (i = ++len; i < strlen(path); i++)  
+	{                           
+		if (path[i] != '_' && path[i] != '.' && path[i] != '-')             
+		{                        
+			Param[index][j] = path[i];
+			j++;
+		}
+		else
+		{
+			Param[index][j] = '\0';
+			servlog(INFO, "file name param:%s", Param[index]);
+			index++;
+			j = 0;
+
+			if (index == 7 && strstr(path, ".ts"))
+				break;	
+		}
+	}
+
+		
+	if (index == 7 && strstr(path, ".ts"))
+	{
+		task -> width		= atoi(Param[2]);
+		task -> height		= atoi(Param[3]);
+		task -> bitrate		= atoi(Param[4]);
+        strcpy(task->file_name, path);
+		return 0;
+	}
+	return -1;
+
+}
+
 
 int transcode(const char *path)
 {
@@ -121,20 +168,15 @@ int transcode(const char *path)
 	else if (ret == 0)
 	{
 		TransTask task;
-		ret = get_name_info(path, task); //get the information from the file name.
+		ret = get_name_info(path, &task); //get the information from the file name.
 		if (ret == -1)
 		{
 			servlog(ERROR, "can't get the info from file name:%s", path);
 			return -1;
 		}
 
-		servlog(INFO, "task->filename:%s", task.filename.c_str());
+		servlog(INFO, "task->file_name:%s", task.file_name);
 		
-		if(query_db(task) ==  -1)
-		{
-			servlog(ERROR, "can't get the file info in db:%s", path);
-			return -1;
-		}
 
 		if(trans_file(task, true, 1))
 			servlog(INFO, "transcode the file success:%s", path);
