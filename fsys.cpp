@@ -195,13 +195,14 @@ int trans_file(TransTask* task, const char* path)
     char new_ts[200]      = {0};
     char original_ts[200] = {0};
 
-    strcpy(original_ts, "/home/guanyu/Public/david/");
+    strcpy(original_ts, "/home/guanyu/Public/china/");
     strcat(original_ts, task->file_name);
     strcat(original_ts, ".ts");
 
-    char cmd[200] = {0};
+    char cmd[300] = {0};
     strcpy(cmd, "ffmpeg -i ");
     strcat(cmd, original_ts);
+    strcat(cmd, " -qscale 0 -acodec copy ");
     strcat(cmd, " -s ");
     strcat(cmd, task->width);
     strcat(cmd, "x");
